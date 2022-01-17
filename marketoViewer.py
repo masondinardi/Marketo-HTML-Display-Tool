@@ -10,7 +10,7 @@ def file_open(fname):
     try:
         f = open(fname, 'r')
     except IOError:
-        print("ERROR: No file by this name " + fname)    
+        print("ERROR: No file by this name " + fname)
 
     try:
         shutil.copy(fname, destination)
@@ -18,13 +18,15 @@ def file_open(fname):
     except shutil.SameFileError:
         print("Source and destination represents the same file.")
     
-    dest = open(destination, 'r')
+    #dest = open(destination, 'r')
     parse_file(f)
 
 # Parse out all meta tags and save them in a dictionary to be injected into temp file
 def parse_file(inp):
+    
     marketoVars = dict()
     valIndex = 0
+
     for i, line in enumerate(inp):
         #stop if style tag is found
         if "<style>" in line:
@@ -33,8 +35,6 @@ def parse_file(inp):
         
         if "<meta" in line:
             if "class" in line:
-                
-                # extract = re.compile(r'"([^"]*)"')
 
                 #use regex to find id and insert into dictionary
                 idSubString = re.findall('id="(.*?)"', line)
@@ -48,9 +48,18 @@ def parse_file(inp):
                 marketoVars[idSubString[0]] = defaultValue
                 valIndex += 1
                 
-    print(marketoVars.items())
-                        
-    
+    replace(marketoVars)
+
+# Takes the dict produced from the parse function
+# input to search for vars in the temp file and
+# replace w vals in temp. Returns a display ready
+# html file
+def replace(dict):
+
+    try:
+        f = open('temp.html', 'r')
+    except IOError:
+        print("ERROR: No file by this name")
 
 # Driver
 def main():
