@@ -34,25 +34,21 @@ def parse_file(inp):
         if "<meta" in line:
             if "class" in line:
                 
-                extract = re.compile(r'"([^"]*)"')
+                # extract = re.compile(r'"([^"]*)"')
 
-                idSubString = re.findall('id=(.*?)[\s]', line)
+                #use regex to find id and insert into dictionary
+                idSubString = re.findall('id="(.*?)"', line)
 
-                marketoVars[valIndex] = idSubString[0].replace('"', '')
-                
+                defaultValue = re.findall('default="(.*?)"', line)
+                #check if marketo variable is of "mktoNumber" datatype
+                if "units" in line:
+                    unit = re.findall('units="(.*?)"', line)
+                    defaultValue[0] = defaultValue[0] + unit[0]
+
+                marketoVars[idSubString[0]] = defaultValue
                 valIndex += 1
                 
     print(marketoVars.items())
-"""                idVal = list(filter(extract.findall, idSubString[0]))
-                print(idVal)
-               for c in line:
-                    print(c)
-                     if c.isspace():
-                        break
-                    
-                    print(subString)
-                    if c == "i" and line[i+1] == "d" and line[i+2] == "=":
-                        subString = """""
                         
     
 
